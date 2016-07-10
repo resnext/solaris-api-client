@@ -4,15 +4,15 @@ namespace Solaris;
 
 class Response
 {
-    protected $data;
+    protected $payload;
 
-    public function __construct(Payload $payload)
+    final public function __construct(Payload $payload)
     {
-        $this->data = $payload;
+        $this->payload = $payload;
+        $this->init();
     }
 
-    public function isSuccess()
+    public function init()
     {
-        return false;
     }
 }

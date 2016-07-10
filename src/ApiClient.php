@@ -5,6 +5,7 @@ namespace Solaris;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use GuzzleHttp;
+use Solaris\Exceptions\ConnectException;
 use Solaris\Requests\AddCustomerRequest;
 use Solaris\Responses\AddCustomerResponse;
 
@@ -33,12 +34,19 @@ class ApiClient implements LoggerAwareInterface
      * ApiClient constructor.
      *
      * @param string $url Solaris API endpoint.
+     * @param string $username
+     * @param string $password
+     * @param mixed  $options
      */
-    public function __construct($url, $username, $password)
+    public function __construct($url, $username, $password, $options = [])
     {
         $this->url = $url;
         $this->username = $username;
         $this->password = $password;
+
+        if (isset($options['httpClient']) && $options['httpClient'] instanceof GuzzleHttp\ClientInterface) {
+            $this->httpClient = $options['httpClient'];
+        }
     }
 
     /**
@@ -51,6 +59,13 @@ class ApiClient implements LoggerAwareInterface
         $this->logger = $logger;
     }
 
+    /**
+     * @param \Solaris\Requests\AddCustomerRequest $request
+     *
+     * @throws \Solaris\Exceptions\EmailAlreadyExistsException
+     *
+     * @return AddCustomerResponse
+     */
     public function addCustomer(AddCustomerRequest $request)
     {
         $data = [
@@ -91,21 +106,23 @@ class ApiClient implements LoggerAwareInterface
         $url .= '?'.http_build_query($data);
 
         try {
-
             return (string) $this->getHttpClient()->get($url, [
                 GuzzleHttp\RequestOptions::HEADERS => [
                     'User-Agent' => 'Solaris API Client',
                     'Accept'     => 'application/json',
                 ]
             ])->getBody();
-        } catch (GuzzleHttp\Exception\ServerException $exception) {
+        } catch (GuzzleHttp\Exception\ConnectException $e) {
 
-            return (string) $exception->getResponse()->getBody();
+            return new ClientException($e->getMessage());
+        } catch (GuzzleHttp\Exception\ServerException $e) {
+
+            return (string) $e->getResponse()->getBody();
         }
     }
 
     /**
-     * This method should be used insted direct access to property $httpClient
+     * This method should be used instead direct access to property $httpClient
      *
      * @return \GuzzleHttp\ClientInterface|GuzzleHttp\Client
      */
@@ -122,7 +139,8 @@ class ApiClient implements LoggerAwareInterface
             ));
         }
         $this->httpClient = new GuzzleHttp\Client([
-            'handler'  => $stack,
+            'handler' => $stack,
+            GuzzleHttp\RequestOptions::CONNECT_TIMEOUT => $this->options['timeout']
         ]);
         return $this->httpClient;
     }
