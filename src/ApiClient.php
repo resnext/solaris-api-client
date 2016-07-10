@@ -92,7 +92,12 @@ class ApiClient implements LoggerAwareInterface
 
         try {
 
-            return (string) $this->getHttpClient()->get($url)->getBody();
+            return (string) $this->getHttpClient()->get($url, [
+                GuzzleHttp\RequestOptions::HEADERS => [
+                    'User-Agent' => 'Solaris API Client',
+                    'Accept'     => 'application/json',
+                ]
+            ])->getBody();
         } catch (GuzzleHttp\Exception\ServerException $exception) {
 
             return (string) $exception->getResponse()->getBody();
