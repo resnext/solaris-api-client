@@ -53,6 +53,22 @@ class AddCustomerRequest extends Request
     {
         return $this->currency;
     }
+
+    /**
+     * @return string
+     */
+    public function getIp()
+    {
+        return $this->ip;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
     
     protected $firstName;
 
@@ -65,4 +81,8 @@ class AddCustomerRequest extends Request
     protected $country;
 
     protected $currency;
+
+    protected $ip;
+
+    protected $password;
 }

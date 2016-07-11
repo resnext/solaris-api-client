@@ -38,6 +38,7 @@ $request = new \Solaris\Requests\AddCustomerRequest([
     'phone' => '420775373671',
     'country' => 'cz',
     'currency' => 'USD',
+    'password' => 'qwerty',
 ]);
 
 /**

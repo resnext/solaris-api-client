@@ -69,14 +69,16 @@ class ApiClient implements LoggerAwareInterface
     public function addCustomer(AddCustomerRequest $request)
     {
         $data = [
-            'MODULE'    => 'Customer',
-            'COMMAND'   => 'add',
-            'FirstName' => $request->getFirstName(),
-            'LastName'  => $request->getLastName(),
-            'email'     => $request->getEmail(),
-            'Phone'     => $request->getPhone(),
-            'country'   => $request->getCountry(),
-            'currency'  => $request->getCurrency(),
+            'MODULE'        => 'Customer',
+            'COMMAND'       => 'add',
+            'FirstName'     => $request->getFirstName(),
+            'LastName'      => $request->getLastName(),
+            'email'         => $request->getEmail(),
+            'password'      => $request->getPassword(),
+            'Phone'         => $request->getPhone(),
+            'country'       => $request->getCountry(),
+            'currency'      => $request->getCurrency(),
+            'registered_ip' => $request->getIp(),
         ];
 
         $payload = new Payload($this->request($data));
@@ -140,7 +142,6 @@ class ApiClient implements LoggerAwareInterface
         }
         $this->httpClient = new GuzzleHttp\Client([
             'handler' => $stack,
-            GuzzleHttp\RequestOptions::CONNECT_TIMEOUT => $this->options['timeout']
         ]);
         return $this->httpClient;
     }
