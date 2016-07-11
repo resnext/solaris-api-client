@@ -3,6 +3,8 @@
 namespace Solaris\Tests;
 
 use Solaris\Requests\AddCustomerRequest;
+use Solaris\Requests\GetCustomerAuthKeyRequest;
+use Solaris\Responses\GetCustomerAuthKeyResponse;
 
 class CustomerTest extends TestCase
 {
@@ -55,5 +57,23 @@ class CustomerTest extends TestCase
         $request = $this->getRandomAddCustomerRequest();
         $this->apiClient->addCustomer($request);
         $this->apiClient->addCustomer($request);
+    }
+
+    public function testGetCustomerAuthKeyWithValidEmail()
+    {
+        $request = $this->getRandomAddCustomerRequest();
+        $this->apiClient->addCustomer($request);
+        $request = new GetCustomerAuthKeyRequest(['email' => $request->getEmail()]);
+        $response = $this->apiClient->getCustomerAuthKey($request);
+        $this->assertNotEmpty($response->getAuthUrl());
+    }
+
+    /**
+     * @expectedException \Solaris\Exceptions\UnknownEmailException
+     */
+    public function testGetCustomerAuthKeyWithWrongEmail()
+    {
+        $request = new GetCustomerAuthKeyRequest(['email' => $this->faker->email]);
+        $this->apiClient->getCustomerAuthKey($request);
     }
 }

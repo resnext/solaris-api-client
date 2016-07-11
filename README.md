@@ -26,6 +26,18 @@ $apiClient = new \Solaris\ApiClient(<API_URL>, <API_USERNAME>, <API_PASSWORD>, [
 ]);
 ```
 
+## Get available countries list
+
+For customer adding you need specify countryISO 3166-1 code (ex.: en, us, gb). You can get available for registration
+countries list as bellow:
+
+```php
+/** @var \Solaris\Responses\GetCountriesResponse $response */
+$response = $apiClient->getCountries();
+/** @var \Solaris\Entities\Country[] $countries */
+$countries = $response->getCountries();
+```
+
 ## Add customer
 
 Customer's adding is main method of any trade platform...
@@ -34,15 +46,28 @@ Customer's adding is main method of any trade platform...
 $request = new \Solaris\Requests\AddCustomerRequest([
     'firstName' => 'John',
     'lastName' => 'Smith',
-    'email' => 'john.smith.2@gmail.com',
-    'phone' => '420775373671',
+    'email' => 'john.smith@domain.com',
+    'phone' => '123456789',
     'country' => 'cz',
     'currency' => 'USD',
     'password' => 'qwerty',
 ]);
 
-/**
- * @var \Solaris\Responses\AddCustomerResponse $response
- */
+/** @var \Solaris\Responses\AddCustomerResponse $response */
 $response = $apiClient->addCustomer($request);
+```
+
+## Get customer auto-login URL and auth key.
+
+It is really easy:
+
+```php
+$request = new \Solaris\Requests\GetCustomerAuthKeyRequest(['email' => 'john.smith@domain.com']);
+
+/**
+ * @var \Solaris\Responses\GetCustomerAuthKeyResponse $response
+ */
+$response = $apiClient->getCustomerAuthKey($request);
+
+echo $response->getAuthUrl();
 ```

@@ -5,10 +5,11 @@ namespace Solaris;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use GuzzleHttp;
-use Solaris\Exceptions\ConnectException;
 use Solaris\Requests\AddCustomerRequest;
+use Solaris\Requests\GetCustomerAuthKeyRequest;
 use Solaris\Responses\AddCustomerResponse;
 use Solaris\Responses\GetCountriesResponse;
+use Solaris\Responses\GetCustomerAuthKeyResponse;
 
 class ApiClient implements LoggerAwareInterface
 {
@@ -77,7 +78,7 @@ class ApiClient implements LoggerAwareInterface
      *
      * @throws \Solaris\Exceptions\EmailAlreadyExistsException
      *
-     * @return AddCustomerResponse
+     * @return \Solaris\Responses\AddCustomerResponse
      */
     public function addCustomer(AddCustomerRequest $request)
     {
@@ -97,6 +98,24 @@ class ApiClient implements LoggerAwareInterface
         $payload = new Payload($this->request($data));
 
         return new AddCustomerResponse($payload);
+    }
+
+    /**
+     * @param \Solaris\Requests\GetCustomerAuthKeyRequest $request
+     *
+     * @return \Solaris\Responses\GetCustomerAuthKeyResponse
+     */
+    public function getCustomerAuthKey(GetCustomerAuthKeyRequest $request)
+    {
+        $data = [
+            'MODULE'        => 'Customer',
+            'COMMAND'       => 'getAuthKey',
+            'email'         => $request->getEmail(),
+        ];
+
+        $payload = new Payload($this->request($data));
+
+        return new GetCustomerAuthKeyResponse($payload);
     }
 
     protected function sign(&$data)
@@ -130,6 +149,9 @@ class ApiClient implements LoggerAwareInterface
         } catch (GuzzleHttp\Exception\ConnectException $e) {
 
             return new ClientException($e->getMessage());
+        } catch (GuzzleHttp\Exception\ClientException $e) {
+
+            return (string) $e->getResponse()->getBody();
         } catch (GuzzleHttp\Exception\ServerException $e) {
 
             return (string) $e->getResponse()->getBody();
