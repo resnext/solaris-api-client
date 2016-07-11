@@ -6,6 +6,14 @@ use Solaris\Requests\AddCustomerRequest;
 
 class CustomerTest extends TestCase
 {
+    protected function getRandomCountry()
+    {
+        $response = $this->apiClient->getCountries();
+        $countries = $response->getCountries();
+        shuffle($countries);
+        return array_pop($countries);
+    }
+
     /**
      * @return \Solaris\Requests\AddCustomerRequest
      */
@@ -13,6 +21,7 @@ class CustomerTest extends TestCase
     {
         $email = 'text'.time().'@gmail.com';
         $password = md5(rand());
+        $country = $this->getRandomCountry();
 
         $request = new AddCustomerRequest([
             'firstName' => $this->faker->firstName,
@@ -20,7 +29,7 @@ class CustomerTest extends TestCase
             'email'     => $email,
             'password'  => $password,
             'phone'     => $this->faker->randomNumber(8),
-            'country'   => $this->faker->countryCode,
+            'country'   => $country->getCode(),
             'ip'        => $this->faker->ipv4,
         ]);
 

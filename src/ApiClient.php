@@ -8,6 +8,7 @@ use GuzzleHttp;
 use Solaris\Exceptions\ConnectException;
 use Solaris\Requests\AddCustomerRequest;
 use Solaris\Responses\AddCustomerResponse;
+use Solaris\Responses\GetCountriesResponse;
 
 class ApiClient implements LoggerAwareInterface
 {
@@ -57,6 +58,18 @@ class ApiClient implements LoggerAwareInterface
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
+    }
+
+    public function getCountries()
+    {
+        $data = [
+            'MODULE'        => 'Countries',
+            'COMMAND'       => 'get',
+        ];
+
+        $payload = new Payload($this->request($data));
+
+        return new GetCountriesResponse($payload);
     }
 
     /**
