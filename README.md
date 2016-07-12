@@ -71,3 +71,12 @@ $response = $apiClient->getCustomerAuthKey($request);
 
 echo $response->getAuthUrl();
 ```
+
+## Deposits retrieving
+
+```php
+/** @var \Solaris\Responses\GetDepositsResponse $response */
+$response = $apiClient->getDeposits();
+/** @var \Solaris\Entities\Deposit[] $deposits */
+$deposits = $response->getDeposits();
+```

@@ -19,7 +19,7 @@ class GetCustomerAuthKeyResponse extends Response
         }
 
         if (!isset($data['authUrl'])) {
-            throw new ServerException('Wrong response format. Response: [' . $this->payload->toJson() . ']');
+            throw new ServerException($this, 'Wrong response format. Response: [' . $this->payload->toJson() . ']');
         }
 
         $this->authUrl = $data['authUrl'];

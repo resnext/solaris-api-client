@@ -10,6 +10,7 @@ use Solaris\Requests\GetCustomerAuthKeyRequest;
 use Solaris\Responses\AddCustomerResponse;
 use Solaris\Responses\GetCountriesResponse;
 use Solaris\Responses\GetCustomerAuthKeyResponse;
+use Solaris\Responses\GetDepositsResponse;
 
 class ApiClient implements LoggerAwareInterface
 {
@@ -116,6 +117,22 @@ class ApiClient implements LoggerAwareInterface
         $payload = new Payload($this->request($data));
 
         return new GetCustomerAuthKeyResponse($payload);
+    }
+
+    /**
+     *
+     * @return \Solaris\Responses\GetDepositsResponse
+     */
+    public function getDeposits()
+    {
+        $data = [
+            'MODULE'        => 'Customer',
+            'COMMAND'       => 'viewDepositors',
+        ];
+
+        $payload = new Payload($this->request($data));
+
+        return new GetDepositsResponse($payload);
     }
 
     protected function sign(&$data)
