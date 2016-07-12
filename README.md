@@ -2,7 +2,7 @@
 API Client for binary options platform Solaris.
 
 ## General API Client usage.
-Your can configure used httpClient using $options param of ApiClient constructor.
+Your can configure used HTTP client using $options param of ApiClient constructor.
 
 ### Error handling
 
