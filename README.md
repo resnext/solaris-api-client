@@ -1,6 +1,14 @@
 # Solaris API Client.
 API Client for binary options platform Solaris.
 
+## Installation
+
+Install using Composer, doubtless.
+
+```sh
+$ composer require resnext/solaris-api-client
+```
+
 ## General API Client usage.
 Your can configure used HTTP client using $options param of ApiClient constructor.
 
