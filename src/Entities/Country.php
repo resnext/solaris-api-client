@@ -11,6 +11,9 @@ class Country
         $this->code = $code;
     }
 
+    /**
+     * Returns two-letters ISO code of country in uppercase. Example: 'GB'.
+     */
     public function getCode()
     {
         return $this->code;
