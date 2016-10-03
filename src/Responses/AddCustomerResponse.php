@@ -4,6 +4,7 @@ namespace Solaris\Responses;
 
 use Solaris\Exceptions\EmailAlreadyExistsException;
 use Solaris\Response;
+use Solaris\ServerException;
 
 class AddCustomerResponse extends Response
 {
@@ -17,6 +18,10 @@ class AddCustomerResponse extends Response
 
         if (isset($data['message']) && $data['message'] == 'E-mail already exists') {
             throw new EmailAlreadyExistsException($this, $data['message']);
+        }
+
+        if (!isset($data['id']) && isset($data['message'])) {
+            throw new ServerException('Customer not added. ' . $data['message']);
         }
 
         $this->id = $data['id'];
